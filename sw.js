@@ -1,19 +1,19 @@
 const CACHE_NAME = "static_cache";
 const STATIC_ASSETS = [
-    '/index.html',
-    '/indexpaco.html',
-    '/images/Paco_background.png'
+    './index.html',               // Use relative paths
+    './indexpaco.html',          // Ensure these paths are correct
+    './images/Paco_background.png' // Ensure this image exists in the correct location
 ];
 
 async function preCache() {
     const cache = await caches.open(CACHE_NAME);
     try {
-        return cache.addAll(STATIC_ASSETS);
+        await cache.addAll(STATIC_ASSETS);
+        console.log('Assets cached successfully');
     } catch (error) {
         console.error('Failed to cache:', error);
     }
 }
-
 
 self.addEventListener('install', event => {
     console.log("[SW] installed");
@@ -28,7 +28,6 @@ async function cleanupCache() {
             return caches.delete(key);
         }
     });
-
     return Promise.all(keysToDelete);
 }
 
