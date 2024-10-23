@@ -1,52 +1,30 @@
-const CACHE_NAME = "static_cache";
-const STATIC_ASSETS = [
-    'index.html', 
-    'indexpaco.html', 
-    'images/Paco_background.png' 
+var CACHE_NAME = 'my-website-cache-v1';
+var urlsToCache = [
+  '/',
+  '/index.html',
+  '/indexpaco.html',
+  '/images/Paco_background.png'
 ];
 
-async function preCache() {
-    const cache = await caches.open(CACHE_NAME);
-    try {
-        await cache.addAll(STATIC_ASSETS);
-        console.log('Assets cached successfully');
-    } catch (error) {
-        console.error('Failed to cache:', error);
-    }
-}
-
-self.addEventListener('install', event => {
-    console.log("[SW] installed");
-    self.skipWaiting();
-    event.waitUntil(preCache());
+self.addEventListener('install', function(event) {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(function(cache) {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
 });
 
-async function cleanupCache() {
-    const keys = await caches.keys();
-    const keysToDelete = keys.map(key => {
-        if (key !== CACHE_NAME) {
-            return caches.delete(key);
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        if (response) {
+          return response;
         }
-    });
-    return Promise.all(keysToDelete);
-}
-
-self.addEventListener('activate', event => {
-    console.log("[SW] activated");
-    event.waitUntil(cleanupCache());
+        return fetch(event.request);
+      })
+  );
 });
 
-async function fetchAssets(event) {
-    try {
-        const response = await fetch(event.request);
-        return response;
-    } catch (err) {
-        const cache = await caches.open(CACHE_NAME);
-        return cache.match(event.request);
-    }
-}
-
-self.addEventListener('fetch', event => {
-    console.log("[SW] fetched");
-    console.log(event.respondWith(fetchAssets(event)));
-});
