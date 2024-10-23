@@ -1,8 +1,8 @@
 const CACHE_NAME = "static_cache";
 const STATIC_ASSETS = [
-    '/index.html',               // Use relative paths
-    '/indexpaco.html',          // Ensure these paths are correct
-    '/images/Paco_background.png' // Ensure this image exists in the correct location
+    'index.html',               // Use relative paths
+    'indexpaco.html',          // Ensure these paths are correct
+    'images/Paco_background.png' // Ensure this image exists in the correct location
 ];
 
 async function preCache() {
