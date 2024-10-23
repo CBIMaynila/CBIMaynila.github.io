@@ -1,8 +1,8 @@
-const CACHE_NAME = "static_cache_v1";
+const CACHE_NAME = "static_cache";
 const STATIC_ASSETS = [
-    './index.html',
-    './indexpaco.html',
-    './images/Paco_background.png'
+    '/index.html',               // Use relative paths
+    '/indexpaco.html',          // Ensure these paths are correct
+    '/images/Paco_background.png' // Ensure this image exists in the correct location
 ];
 
 async function preCache() {
@@ -39,20 +39,10 @@ self.addEventListener('activate', event => {
 async function fetchAssets(event) {
     try {
         const response = await fetch(event.request);
-        // If the response is valid, return it
-        if (!response || response.status !== 200) {
-            throw new Error('Network response was not ok');
-        }
         return response;
     } catch (err) {
-        console.error('Fetch failed; returning cached response:', err);
         const cache = await caches.open(CACHE_NAME);
-        const cachedResponse = await cache.match(event.request);
-        // Return the cached response if available
-        return cachedResponse || new Response("Offline", {
-            status: 404,
-            statusText: "Not Found",
-        });
+        return cache.match(event.request);
     }
 }
 
