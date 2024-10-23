@@ -3,7 +3,7 @@
     <head>
         <title>LINGAP PAMAMAHAYAG</title>
         <style>
-            .bgcontainer img{
+            .bgcontainer img {
                 width: 100%;
                 height: auto;
             }
@@ -14,8 +14,14 @@
             <img src="images/Paco_background.png">
         </div>
         <script>
-            if (navigator.serviceWorker){
+            if (navigator.serviceWorker) {
                 navigator.serviceWorker.register('sw.js')
+                    .then(function () {
+                        console.log("Service Worker registered successfully.");
+                    })
+                    .catch(function (error) {
+                        console.error("Service Worker registration failed:", error);
+                    });
             }
         </script>
     </body>
