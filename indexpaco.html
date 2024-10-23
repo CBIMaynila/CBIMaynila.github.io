@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LINGAP PAMAMAHAYAG</title>
+        <style>
+            .bgcontainer img{
+                width: 100%;
+                height: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="bgcontainer">
+            <img src="images/Paco_background.png">
+        </div>
+        <script>
+            if (navigator.serviceWorker){
+                navigator.serviceWorker.register('sw.js')
+            }
+        </script>
+    </body>
+</html>
