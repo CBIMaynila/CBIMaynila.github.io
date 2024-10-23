@@ -7,8 +7,13 @@ const STATIC_ASSETS = [
 
 async function preCache() {
     const cache = await caches.open(CACHE_NAME);
-    return cache.addAll(STATIC_ASSETS);
+    try {
+        return cache.addAll(STATIC_ASSETS);
+    } catch (error) {
+        console.error('Failed to cache:', error);
+    }
 }
+
 
 self.addEventListener('install', event => {
     console.log("[SW] installed");
