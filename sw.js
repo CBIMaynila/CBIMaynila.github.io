@@ -39,12 +39,32 @@ self.addEventListener('activate', event => {
 async function fetchAssets(event) {
     try {
         const response = await fetch(event.request);
-        return response;
-    } catch (err) {
+        
+        // Check if the response is OK (status code 200)
+        if (!response || !response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        return response; // Return the valid response
+    } catch (error) {
+        console.error('Fetch failed; returning cached response:', error);
+        
         const cache = await caches.open(CACHE_NAME);
-        return cache.match(event.request);
+        const cachedResponse = await cache.match(event.request);
+        
+        // Return the cached response if it exists; if not, return a default response
+        if (cachedResponse) {
+            return cachedResponse;
+        } else {
+            // Create a default response if no cached response is available
+            return new Response('Offline', {
+                status: 404,
+                statusText: 'Not Found'
+            });
+        }
     }
 }
+
 
 self.addEventListener('fetch', event => {
     console.log("[SW] fetched");
